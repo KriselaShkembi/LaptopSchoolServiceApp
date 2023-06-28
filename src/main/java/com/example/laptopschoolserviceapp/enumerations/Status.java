@@ -1,4 +1,4 @@
-package com.example.laptopschoolserviceapp.models;
+package com.example.laptopschoolserviceapp.enumerations;
 
 public enum Status {
 

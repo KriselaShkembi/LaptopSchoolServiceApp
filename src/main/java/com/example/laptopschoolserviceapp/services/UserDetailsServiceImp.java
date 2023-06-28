@@ -1,4 +1,4 @@
-package com.example.laptopschoolserviceapp.security.config;
+package com.example.laptopschoolserviceapp.services;
 
 
 import com.example.laptopschoolserviceapp.models.User;

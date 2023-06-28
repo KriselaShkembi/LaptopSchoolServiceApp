@@ -1,4 +1,4 @@
-package com.example.laptopschoolserviceapp.security.config;
+package com.example.laptopschoolserviceapp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

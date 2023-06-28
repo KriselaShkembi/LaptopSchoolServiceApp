@@ -1,4 +1,4 @@
-package com.example.laptopschoolserviceapp.security.config;
+package com.example.laptopschoolserviceapp.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

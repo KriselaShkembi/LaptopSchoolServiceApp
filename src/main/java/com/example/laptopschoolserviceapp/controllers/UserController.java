@@ -1,31 +1,41 @@
-package com.betaplan.krisela.loginandregistration.controllers;
+package com.example.laptopschoolserviceapp.controllers;
 
-import com.betaplan.krisela.loginandregistration.models.Book;
-import com.betaplan.krisela.loginandregistration.models.LoginUser;
-import com.betaplan.krisela.loginandregistration.models.User;
-import com.betaplan.krisela.loginandregistration.services.BookService;
-import com.betaplan.krisela.loginandregistration.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.laptopschoolserviceapp.handler.CustomAccessDeniedHandler;
+import com.example.laptopschoolserviceapp.models.*;
+import com.example.laptopschoolserviceapp.security.AuthenticationRequest;
+import com.example.laptopschoolserviceapp.services.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.Binding;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Controller
-public class MainController {
+public class UserController {
 
-    @Autowired
+    // Logger
+    private Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    // Constructor Injection
     private UserService userService;
+    private LaptopService laptopService;
+    private LaptopPartService laptopPartService;
+    private TicketService ticketService;
+    private JwtService jwtService;
 
-    @Autowired
-    private BookService bookService;
-    @GetMapping("/")
+    public UserController(UserService userService, LaptopService laptopService, LaptopPartService laptopPartService, TicketService ticketService, JwtService jwtService) {
+        this.userService = userService;
+        this.laptopService = laptopService;
+        this.laptopPartService = laptopPartService;
+        this.ticketService = ticketService;
+        this.jwtService = jwtService;
+    }
+
+
+    @GetMapping("/log")
     public String index(@ModelAttribute("newUser") User newUser,
                         @ModelAttribute("newLogin")User newLogin,
                         Model model){
@@ -34,7 +44,7 @@ public class MainController {
         return "index";
     }
 
-    @PostMapping("/register")
+  /*  @PostMapping("/register")
     public String register(@Valid @ModelAttribute("newUser") User newUser,
                            @NotNull BindingResult result,
                            Model model,
@@ -45,34 +55,45 @@ public class MainController {
             return "index";
         }
         session.setAttribute("loogedInUserId", newUser.getId());
-        return "redirect:/books";
-    }
+        return "redirect:/dashboard";
+    }*/
 
-    @PostMapping("/login")
+/*
+    @PostMapping("/loginuser")
     public String login(@Valid @ModelAttribute("newLogin") LoginUser newLogin,
-                           @NotNull BindingResult result,
-                           Model model,
-                           HttpSession session){
+                        @NotNull BindingResult result,
+                        Model model,
+                        HttpSession session){
         User user = userService.login(newLogin,result);
         if (result.hasErrors()){
             model.addAttribute("newUser", new User());
             return "index";
         }
         session.setAttribute("loggedInUserId", user.getId());
-        return "redirect:/books";
-    }
+        return "redirect:/dashboard";
+    }*/
 
-    @RequestMapping("/books")
-    public String dashboard(HttpSession session,
-                            Model model){
+    @GetMapping("/dashboard")
+    public String dashboard(@ModelAttribute("newLogin") AuthenticationRequest authenticationRequest, HttpSession session, Model model){
+
         Long loggedInUserId = (Long) session.getAttribute("loggedInUserId");
-        if(loggedInUserId==null){
-            return "redirect:/";
-        }
         User loggedInUser = userService.findOneUser(loggedInUserId);
-        model.addAttribute("user",loggedInUser);
-        model.addAttribute("books",bookService.getAllBooks());
-        return "welcome";
+
+        String token = (String) session.getAttribute("token");
+        if (jwtService.isTokenValid(token, loggedInUser )) {
+            List<Laptop> userLaptops = laptopService.findLaptopsByUserId(loggedInUserId);
+            List<LaptopPart> parts = laptopPartService.getAll();
+            List<Ticket> tickets = ticketService.getAll();
+
+            model.addAttribute("user",loggedInUser);
+            model.addAttribute("userLaptops",userLaptops);
+            model.addAttribute("parts",parts);
+            model.addAttribute("tickets",tickets);
+
+            return "welcome";
+        }
+
+        return "redirect:/";
     }
 
     @RequestMapping("/logout")
@@ -80,68 +101,5 @@ public class MainController {
         session.invalidate();
         return "redirect:/";
     }
-
-    @RequestMapping("/  books/new")
-    public String newBook(@ModelAttribute("book") Book book,
-                             Model model) {
-        model.addAttribute("books", bookService.getAllBooks());
-        return "newBook";
-    }
-
-    @PostMapping("/books/new")
-    public String addNewBook(@Valid @ModelAttribute("book") Book book,
-                                @NotNull BindingResult result, Model model,
-                                HttpSession session) {
-        Long userId = (Long) session.getAttribute("loggedInUserId");
-        User userLogged = userService.findOneUser(userId);
-        if (result.hasErrors()) {
-            return "newBook";
-        } else {
-            book.setUser(userLogged);
-            bookService.createBooks(book);
-            return "redirect:/books";
-        }
-    }
-
-    @RequestMapping("/books/{id}")
-    public String bookDetail(Model model,
-                          @PathVariable("id") Long id,
-                             HttpSession session) {
-        if(session.getAttribute("loggedInUserId") == null){
-            return "redirect:/books";
-        }
-        Book book = bookService.findById(id);
-        model.addAttribute("book", book);
-        model.addAttribute("user", userService.findOneUser((Long)session.getAttribute("loggedInUserId")));
-        return "bookDetails";
-    }
-
-    @GetMapping("/books/{id}/edit")
-    public String getEditBook(@PathVariable("id") Long id, Model model){
-        Book bookEdit = bookService.bookDetails(id);
-        model.addAttribute("bookEdit",bookEdit);
-        return "editBook";
-    }
-
-    @PutMapping("/books/{id}/edit")
-    public String editBook(@Valid @ModelAttribute("bookEdit") Book bookEdit,
-                             @NotNull BindingResult result, Model model,
-                           @PathVariable("id") Long id, HttpSession session) {
-        Long userId = (Long) session.getAttribute("loggedInUserId");
-        User userLogged = userService.findOneUser(userId);
-        if (result.hasErrors()) {
-            return "editBook";
-        } else {
-            bookEdit.setUser(userLogged);
-            bookService.saveBooks(bookEdit);
-            return "redirect:/books";
-        }
-    }
-    @RequestMapping(value = "/books/{id}/delete", method = RequestMethod.DELETE)
-    public String deleteBook(@PathVariable("id") Long id, HttpSession session){
-        bookService.deleteBook(id);
-        return "redirect:/books";
-    }
-
 
 }

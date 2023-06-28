@@ -1,4 +1,4 @@
-package com.example.laptopschoolserviceapp.security.config;
+package com.example.laptopschoolserviceapp.config;
 
 import com.example.laptopschoolserviceapp.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,21 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
 
     private static final String[] AUTH_LIST = {
-            "/auth/**",
-            "/dashboard"
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/rest-api",
+            "/swagger-ui",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/error/**",
+            "/rest-api/swagger-config",
+            "/rest-api","/login", "/register", "/log","/authentication",
+            "/ticket/**", "/part/**" , "/laptop/**"
     };
 
     @Bean
@@ -30,16 +43,18 @@ public class SecurityConfiguration {
         http
                 .cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login", "/register").permitAll()
+                .antMatchers(AUTH_LIST).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
+                .loginPage("/log")
+/*
                 .defaultSuccessUrl("/dashboard")
+*/
                 .and()
                 .logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl("/log")
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

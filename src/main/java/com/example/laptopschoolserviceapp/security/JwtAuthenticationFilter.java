@@ -1,4 +1,4 @@
-package com.example.laptopschoolserviceapp.security.config;
+package com.example.laptopschoolserviceapp.security;
 
 import com.example.laptopschoolserviceapp.services.JwtService;
 import lombok.RequiredArgsConstructor;

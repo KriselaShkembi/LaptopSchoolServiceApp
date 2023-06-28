@@ -1,12 +1,12 @@
-package com.betaplan.krisela.loginandregistration.repositories;
+package com.example.laptopschoolserviceapp.repositories;
 
-import com.betaplan.krisela.loginandregistration.models.User;
-import org.springframework.data.repository.CrudRepository;
+import com.example.laptopschoolserviceapp.models.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 }

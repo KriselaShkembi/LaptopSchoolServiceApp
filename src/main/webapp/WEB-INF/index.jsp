@@ -11,8 +11,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-<h1 class="text-primary">Book Club</h1>
-<h2>A place of friends to share thoughts on books</h2>
+<h1 class="text-primary">Laptop School Service</h1>
+<h2>A place to fix your laptops!</h2>
 <br>
 <div class="container d-flex">
     <div class="container d-flex">
@@ -34,18 +34,19 @@
                 <form:input path="password" class="form-control" type="password"></form:input>
                 <form:errors path="password" class="text-danger"></form:errors>
             </p>
-            <p>
-                <form:label path="confirm">Confirm Password:</form:label>
-                <form:input path="confirm" class="form-control" type="password"></form:input>
-                <form:errors path="confirm" class="text-danger"></form:errors>
-            </p>
+            <label for="role">Role:</label>
+            <form:select path="role">
+                <form:option value="USER" label="User" />
+                <form:option value="ADMIN" label="Admin" />
+            </form:select>
+
             <button class="btn btn-primary">Submit</button>
         </form:form>
     </div>
     <br>
     <div class="container d-flex">
         <%--@elvariable id="newLogin" type="newLogin"--%>
-        <form:form action="/login" method="post" modelAttribute="newLogin">
+        <form:form action="/authentication" method="post" modelAttribute="newLogin">
             <p class="text-info">Log in</p>
             <p>
                 <form:label path="email">Email:</form:label>

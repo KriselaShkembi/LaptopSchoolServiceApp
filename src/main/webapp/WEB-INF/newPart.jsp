@@ -7,33 +7,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>New Laptop</title>
+    <title>New Part</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-<h1>Add the details regarding your new Laptop: </h1>
+<h1>Add a new Laptop Part: </h1>
 <br>
-<%--@elvariable id="laptop" type="projects"--%>
-<form:form method="post" action="/laptop/new" modelAttribute="laptop">
+<%--@elvariable id="part" type="projects"--%>
+<form:form method="post" action="/part/new" modelAttribute="part">
+    <div class="form-group">
+        <form:label path="name">Name of the laptop part:</form:label>
+        <form:input path="name" class="form-control" ></form:input>
+        <form:errors path="name" class="text-danger"></form:errors>
+    </div>
     <div class="form-group">
         <form:label path="description">Description:</form:label>
         <form:input path="description" class="form-control"></form:input>
         <form:errors path="description" class="text-danger"></form:errors>
     </div>
+
     <div class="form-group">
-        <form:label path="screenSize">Screen Size (in inches):</form:label>
-        <form:input path="screenSize" class="form-control" type="number"></form:input>
-        <form:errors path="screenSize" class="text-danger"></form:errors>
+        <form:label path="price">Price:</form:label>
+        <form:input path="price" class="form-control" type="number"></form:input>
+        <form:errors path="price" class="text-danger"></form:errors>
     </div>
     <div class="form-group">
-        <form:label path="RAM">RAM (in GB):</form:label>
-        <form:input path="RAM" class="form-control" type="number"></form:input>
-        <form:errors path="RAM" class="text-danger"></form:errors>
-    </div>
-    <div class="form-group">
-        <form:label path="batteryTime">Battery time (in Hours):</form:label>
-        <form:input path="batteryTime" class="form-control" type="number"></form:input>
-        <form:errors path="batteryTime" class="text-danger"></form:errors>
+        <form:label path="stock">Stock:</form:label>
+        <form:input path="stock" class="form-control" type="number"></form:input>
+        <form:errors path="stock" class="text-danger"></form:errors>
     </div>
     <br>
     <button class="btn btn-info">Submit</button>

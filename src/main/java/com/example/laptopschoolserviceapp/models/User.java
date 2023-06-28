@@ -1,17 +1,30 @@
-package com.example.laptopschoolserviceapp.entities;
+package com.example.laptopschoolserviceapp.models;
 
+import com.example.laptopschoolserviceapp.enumerations.Role;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Builder
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,46 +38,54 @@ public class User {
     @Email(message="Please enter a valid email!")
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @NotEmpty(message = "Password is required")
     @Size(min=8, max=100, message="Password must be between 3-100.")
     private String password;
 
-    @Transient
+ /*   @Transient
     @NotEmpty(message = "Confirm Password is required")
     @Size(min=8, max=100, message="Confirm Password must be between 3-100.")
     private String confirm;
+*/
 
-    /*@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    private List<Book> books;
-    */
-    @Column(updatable=false)
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    private Date createdAt;
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    private Date updatedAt;
+    // Relationships
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Laptop> laptops;
 
-    @PrePersist
-    protected void onCreate(){
-        this.createdAt = new Date();
-    }
-    @PreUpdate
-    protected void onUpdate(){
-        this.updatedAt = new Date();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Ticket> tickets;
+
+    // Implementation of UserDetail
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public User() {
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-  /*  public User(Long id, String username, String email, String password, String confirm, List<Book> books, Date createdAt, Date updatedAt) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.confirm = confirm;
-        this.books = books;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }*/
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+
+    // Getters & Setters
 
     public Long getId() {
         return id;
@@ -98,28 +119,35 @@ public class User {
         this.password = password;
     }
 
-    public String getConfirm() {
+ /*   public String getConfirm() {
         return confirm;
     }
 
     public void setConfirm(String confirm) {
         this.confirm = confirm;
     }
-
-    public Date getCreatedAt() {
-        return createdAt;
+*/
+    public List<Laptop> getLaptops() {
+        return laptops;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setLaptops(List<Laptop> laptops) {
+        this.laptops = laptops;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public List<Ticket> getTickets() {
+        return tickets;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }

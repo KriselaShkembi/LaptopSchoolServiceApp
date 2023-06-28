@@ -1,4 +1,5 @@
-package com.example.laptopschoolserviceapp.entities;
+/*
+package com.example.laptopschoolserviceapp.models;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -32,3 +33,4 @@ public class LoginUser {
         this.password = password;
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.example.laptopschoolserviceapp.security.config;
+package com.example.laptopschoolserviceapp.security;
 
 import com.example.laptopschoolserviceapp.enumerations.Role;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,5 @@ public class RegisterRequest {
     private String username;
     private String email;
     private String password;
-/*
     private Role role;
-*/
 }

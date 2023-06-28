@@ -9,24 +9,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Project Detail</title>
+    <title>Laptop Part Details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-<h1>Project details</h1>
+<h1>Laptop Part details</h1>
 <a href="/dashboard" >Back to dashboard</a>
 
-<p>Project: ${project.projectName}</p>
-<p>Description: ${project.description}</p>
-<p>Due date: <fmt:formatDate value="${project.dueDate}" pattern="MMMM dd"/></p>
+<p>Name: ${part.name}</p>
+<p>Description: ${part.description}</p>
+<p>Price: ${part.price} $</p>
+<p>Stock: ${part.stock} </p>
 <br>
-<a href="/projects/${project.id}/tasks">See tasks!</a>
-<br>
-<c:if test="${project.user.equals(user)}">
-    <form:form action="/projects/${project.id}/delete" method="delete">
-        <button class="btn btn-danger">Delete</button>
-    </form:form>
 
-</c:if>
+<button class="btn btn-info"><a href="/part/${part.id}/edit" >Edit</a></button>
+
+
+<form:form action="/part/${part.id}/delete" method="delete">
+    <button class="btn btn-danger">Delete</button>
+</form:form>
 </body>
 </html>

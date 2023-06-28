@@ -1,8 +1,11 @@
-package com.example.laptopschoolserviceapp.security.config;
+package com.example.laptopschoolserviceapp.services;
 
 import com.example.laptopschoolserviceapp.enumerations.Role;
 import com.example.laptopschoolserviceapp.models.User;
 import com.example.laptopschoolserviceapp.repositories.UserRepository;
+import com.example.laptopschoolserviceapp.security.AuthenticationRequest;
+import com.example.laptopschoolserviceapp.security.AuthenticationResponse;
+import com.example.laptopschoolserviceapp.security.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +24,7 @@ public class AuthenticationService {
         var user = User.builder().username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
+                .role(request.getRole())
                 .build();
         userRepository.save(user);
         var jwtToken =jwtService.generateToken(user);

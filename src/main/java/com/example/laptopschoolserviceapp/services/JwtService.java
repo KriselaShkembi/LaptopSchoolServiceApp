@@ -1,4 +1,4 @@
-package com.example.laptopschoolserviceapp.security.config;
+package com.example.laptopschoolserviceapp.services;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -30,7 +30,6 @@ public class JwtService {
     private Claims extractAllClaims(String token){
         return Jwts.parser()
                 .setSigningKey(getSigningKey())
-                // build?????????????
                 .parseClaimsJws(token)
                 .getBody();
     }
